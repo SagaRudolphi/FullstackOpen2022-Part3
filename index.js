@@ -25,7 +25,7 @@ let contacts = [
 ]
 
 app.get('/', (request, response) => {
-    response.send('<h1>Hello World!</h1>')
+    response.send('<h1>Welcome to my phonebook</h1>')
   })
   
   app.get('/api/persons', (request, response) => {
