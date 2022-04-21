@@ -1,7 +1,8 @@
+const { response } = require('express')
 const express = require('express')
 const app = express()
 
-let contacts = [
+let persons = [
     { 
       "id": 1,
       "name": "Arto Hellas", 
@@ -22,19 +23,34 @@ let contacts = [
       "name": "Mary Poppendieck", 
       "number": "39-23-6423122"
     }
-]
+  ]
+
+
 
 app.get('/', (request, response) => {
     response.send('<h1>Welcome to my phonebook</h1>')
   })
   
   app.get('/api/persons', (request, response) => {
-    response.json(contacts)
+    response.json(persons)
   })
 
   
 app.get('/info', (request, response) => {
-    response.send(`<p>This phonebook has info of ${Object.keys(contacts).length} contacts</p> <p> ${new Date()}</p>`)
+    response.send(`<p>This phonebook has info of ${Object.keys(persons).length} contacts.</p> <p> ${new Date()}</p>`)
+})
+
+app.get('/api/persons/:id', (request, response) => {
+  const id = Number(request.params.id)
+  const person = persons.find(person => person.id=== id)
+  
+  if (person) {
+    response.json(person)  
+  }
+  else{
+    response.statusMessage = "The person was not found"
+    response.status(404).end()
+   }
 })
 
 const PORT = 3001
