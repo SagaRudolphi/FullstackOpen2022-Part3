@@ -23,7 +23,7 @@ let persons = [
       "name": "Mary Poppendieck", 
       "number": "39-23-6423122"
     }
-]
+  ]
 
 
 
@@ -37,7 +37,7 @@ app.get('/', (request, response) => {
 
   
 app.get('/info', (request, response) => {
-    response.send(`<p>This phonebook has info of ${Object.keys(persons).length} contacts</p> <p> ${new Date()}</p>`)
+    response.send(`<p>This phonebook has info of ${Object.keys(persons).length} contacts.</p> <p> ${new Date()}</p>`)
 })
 
 app.get('/api/persons/:id', (request, response) => {
