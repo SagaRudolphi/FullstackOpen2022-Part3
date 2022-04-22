@@ -2,6 +2,8 @@ const { response } = require('express')
 const express = require('express')
 const app = express()
 
+app.use(express.json())
+
 let persons = [
     { 
       "id": 1,
@@ -24,8 +26,6 @@ let persons = [
       "number": "39-23-6423122"
     }
 ]
-
-
 
 app.get('/', (request, response) => {
     response.send('<h1>Welcome to my phonebook</h1>')
@@ -52,6 +52,32 @@ app.get('/api/persons/:id', (request, response) => {
     response.status(404).end()
    }
 })
+
+app.post('/api/persons', (request, response) => {
+  const newPerson = request.body
+
+   
+  if ( !newPerson.hasOwnProperty('name') || !newPerson.hasOwnProperty('number') || newPerson.name === "" || newPerson.number === "" ) {
+    response.statusMessage = "Error: Name or phonenumber is missing"
+    response.status(404).end()
+  }
+  else if (persons.some(person => person.name === newPerson.name)) {
+    response.statusMessage = "Error: Name must be unique"
+    response.status(400).end()
+  }
+  else {
+    const max = 10000
+    const randomID = Math.floor(Math.random() * max)
+
+    newPerson.id = randomID
+
+    persons = persons.concat(newPerson)
+
+    console.log(newPerson)
+    response.json(newPerson)
+    response.status(200).end()
+  }
+})  
 
 const PORT = 3001
 app.listen(PORT)
