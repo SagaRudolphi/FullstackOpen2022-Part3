@@ -1,9 +1,10 @@
 const { response } = require('express')
 const express = require('express')
 const app = express()
+const morgan = require('morgan')
 
 app.use(express.json())
-
+app.use(morgan('tiny'))
 
 let persons = [
   {
@@ -46,11 +47,11 @@ app.get('/api/persons/:id', (request, response) => {
   const person = persons.find(person => person.id === id)
 
   if (person) {
-    response.json(person)
+    return response.status(200).json(person)
   }
   else {
-    response.statusMessage = "The person was not found"
-    response.status(404).end()
+    
+    return response.status(404).json({ error: 'Person not found'})
   }
 })
 
@@ -58,7 +59,7 @@ app.delete('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
   person = persons.filter(person => person.id !== id)
 
-  response.status(204).end()
+  return response.status(204)
 })
 
 app.post('/api/persons', (request, response) => {
@@ -94,6 +95,8 @@ app.post('/api/persons', (request, response) => {
   console.log(person)
   response.json(person)
 })
+
+
 
 const PORT = 3001
 app.listen(PORT)
