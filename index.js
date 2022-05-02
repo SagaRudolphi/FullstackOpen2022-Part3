@@ -3,8 +3,10 @@ const { request } = require('express')
 const express = require('express')
 const app = express()
 const morgan = require('morgan')
+const cors = require('cors')
 
 app.use(express.json())
+app.use(cors())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :postData'))
 
 morgan.token('postData', function (req, res) {
@@ -13,6 +15,7 @@ morgan.token('postData', function (req, res) {
   }
   return ''
 })
+
 
 let persons = [
   {
@@ -64,10 +67,13 @@ app.get('/api/persons/:id', (request, response) => {
 })
 
 app.delete('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id)
-  person = persons.filter(person => person.id !== id)
+    const id = Number(request.params.id)
+  
 
-  return response.status(204)
+    persons = persons.filter(person => person.id !== id)
+    return response.status(204).end()
+  
+
 })
 
 app.post('/api/persons', (request, response) => {
@@ -103,7 +109,6 @@ app.post('/api/persons', (request, response) => {
   console.log(person)
   response.json(person)
 })
-
 
 
 const PORT = 3001
