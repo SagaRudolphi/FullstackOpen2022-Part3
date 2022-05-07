@@ -12,7 +12,7 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :p
 
 morgan.token('postData', function (req, res) {
   if (req.method === 'POST') {
-    return ' ' + JSON.stringify(req.body) 
+    return ' ' + JSON.stringify(req.body)
   }
   return ''
 })
@@ -64,24 +64,20 @@ app.get('/api/persons/:id', (request, response) => {
     return response.status(200).json(person)
   }
   else {
-    
-    return response.status(404).json({ error: 'Person not found'})
+
+    return response.status(404).json({ error: 'Person not found' })
   }
 })
 
 app.delete('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-  
+  const id = Number(request.params.id)
 
-    persons = persons.filter(person => person.id !== id)
-    return response.status(204).end()
-  
-
+  persons = persons.filter(person => person.id !== id)
+  return response.status(204).end()
 })
 
 app.post('/api/persons', (request, response) => {
   const body = request.body
-  const id = Math.floor(Math.random() * 5000)
 
   if (!body.name) {
     return response.status(400).json({
@@ -95,22 +91,14 @@ app.post('/api/persons', (request, response) => {
     })
   }
 
-  if (persons.some(person => person.name === body.name)) {
-    return response.status(400).json({
-      error: 'The name must be unique'
-    })
-  }
-
-  const person = {
-    id: id,
+  const person = new Person({
     name: body.name,
     number: body.number
-  }
+  })
 
-  persons = persons.concat(person)
-
-  console.log(person)
-  response.json(person)
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
 })
 
 
